@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123d32">
+<title>Prescripción de Naturaleza | SMS · PEHSU Murcia</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      forest: { 950:'#102d26', 900:'#123d32', 800:'#185344', 700:'#216b56', 600:'#2c8068' },
+      sage: { 100:'#e8f0e8', 200:'#d5e4d6', 300:'#b9d0bc', 500:'#78977e' },
+      cream:'#faf8f1', sms:'#0877a8', sand:'#eee9dc'
+    },
+    fontFamily: { sans:['Plus Jakarta Sans','sans-serif'], display:['Fraunces','serif'] },
+    boxShadow: { soft:'0 18px 50px rgba(18,61,50,.09)' }
+  }}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  html{scroll-behavior:smooth;scroll-padding-top:88px}
+  body{font-family:'Plus Jakarta Sans',sans-serif;background:#faf8f1;color:#18352e}
+  .display{font-family:'Fraunces',serif}
+  .glass{background:rgba(250,248,241,.88);backdrop-filter:blur(14px)}
+  .hero-pattern{background-image:radial-gradient(rgba(255,255,255,.13) 1px,transparent 1px);background-size:22px 22px}
+  .nature-card{transition:transform .22s ease,box-shadow .22s ease}
+  .nature-card:hover{transform:translateY(-4px);box-shadow:0 18px 35px rgba(18,61,50,.12)}
+  .field{width:100%;border:1px solid #d8e2d8;border-radius:12px;background:#fff;padding:11px 13px;color:#18352e;outline:none}
+  .field:focus{border-color:#2c8068;box-shadow:0 0 0 3px rgba(44,128,104,.12)}
+  .pill{border:1px solid #d5e4d6;border-radius:999px;padding:8px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+  .pill.active{background:#185344;color:white;border-color:#185344}
+  .recipe-paper{background:white;color:#20382f;box-shadow:0 14px 40px rgba(18,61,50,.12)}
+  .week-cell{height:25px;border:1px solid #b9cbbd;border-radius:5px}
+  .toast{opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s}
+  .toast.show{opacity:1;transform:translateY(0)}
+  @media print{
+    @page{size:A4;margin:12mm}
+    body{background:#fff!important}
+    body *{visibility:hidden!important}
+    #recipePaper,#recipePaper *{visibility:visible!important}
+    #recipePaper{position:absolute!important;left:0!important;top:0!important;width:100%!important;box-shadow:none!important;border:0!important;margin:0!important}
+    .no-print{display:none!important}
+  }
+</style>
+</head>
+<body>
+<header class="fixed top-0 inset-x-0 z-50 glass border-b border-sage-200/70">
+  <div class="max-w-7xl mx-auto px-5 h-[76px] flex items-center justify-between gap-4">
+    <a href="#inicio" class="flex items-center gap-3 min-w-0">
+      <!-- INSERTAR LOGO PEHSU AQUÍ -->
+      <div class="w-10 h-10 rounded-xl bg-forest-900 text-white grid place-items-center shrink-0"><span class="text-xl">✳</span></div>
+      <div class="leading-tight"><div class="font-extrabold text-forest-900 tracking-tight">PEHSU Murcia</div><div class="text-[10px] uppercase tracking-[.16em] text-slate-500 font-bold">Servicio Murciano de Salud</div></div>
+    </a>
+    <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-600">
+      <a class="hover:text-forest-700" href="#beneficios">Beneficios</a>
+      <a class="hover:text-forest-700" href="#espacios">Espacios naturales</a>
+      <a class="hover:text-forest-700" href="#mapa">Mapa</a>
+    </nav>
+    <a href="#crear-receta" class="bg-forest-900 hover:bg-forest-700 text-white text-sm font-bold px-5 py-3 rounded-full shadow-lg shadow-forest-900/15 transition">Crear Receta <span class="ml-1">↗</span></a>
+  </div>
+</header>
+
+<main id="inicio" class="pt-[76px]">
+<section class="relative overflow-hidden bg-forest-950 text-white hero-pattern">
+  <div class="absolute -right-20 -top-32 w-[520px] h-[520px] rounded-full border border-white/10"></div>
+  <div class="absolute right-20 -bottom-64 w-[620px] h-[620px] rounded-full border border-white/10"></div>
+  <div class="max-w-7xl mx-auto px-5 py-20 md:py-28 grid lg:grid-cols-[1.15fr_.85fr] gap-12 items-center relative">
+    <div>
+      <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold tracking-wide text-sage-200 mb-7"><span class="w-2 h-2 bg-emerald-300 rounded-full"></span> PROGRAMA DE SALUD Y NATURALEZA · REGIÓN DE MURCIA</div>
+      <h1 class="display text-5xl md:text-7xl leading-[1.03] max-w-3xl">La naturaleza también <span class="italic text-sage-300">forma parte</span> del tratamiento.</h1>
+      <p class="mt-7 text-lg md:text-xl leading-relaxed text-white/75 max-w-2xl">Una herramienta para integrar el contacto con espacios naturales en la promoción de la salud y el bienestar de pacientes y ciudadanía.</p>
+      <div class="flex flex-wrap gap-3 mt-9">
+        <a href="#crear-receta" class="bg-sage-300 hover:bg-white text-forest-950 font-extrabold rounded-full px-7 py-4 transition">Crear Receta <span class="ml-2">→</span></a>
+        <a href="#beneficios" class="border border-white/30 hover:bg-white/10 rounded-full px-7 py-4 font-bold transition">Conocer los beneficios</a>
+      </div>
+      <div class="mt-12 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/60"><span>◈ Servicio Murciano de Salud</span><span>◈ PEHSU Murcia</span><span>◈ Prescripción basada en evidencia</span></div>
+    </div>
+    <div class="relative">
+      <div class="rounded-[2rem] overflow-hidden border border-white/15 bg-gradient-to-br from-emerald-800 to-forest-900 p-5 md:p-7 shadow-2xl">
+        <div class="rounded-[1.5rem] bg-[#dce8d9] p-5 md:p-7 text-forest-950 min-h-[330px] flex flex-col justify-between">
+          <div class="flex justify-between items-start"><span class="text-xs uppercase tracking-[.2em] font-extrabold">Una indicación para el bienestar</span><span class="text-2xl">🌿</span></div>
+          <div><div class="display text-4xl md:text-5xl leading-tight">Salir, explorar, respirar.</div><p class="mt-4 text-sm text-forest-800/80 max-w-xs">Pequeñas oportunidades de conexión con la naturaleza pueden incorporarse a la vida cotidiana.</p></div>
+          <div class="flex gap-2"><span class="bg-white/70 rounded-full px-3 py-2 text-xs font-bold">Movimiento</span><span class="bg-white/70 rounded-full px-3 py-2 text-xs font-bold">Calma</span><span class="bg-white/70 rounded-full px-3 py-2 text-xs font-bold">Conexión</span></div>
+        </div>
+        <div class="flex justify-between items-center px-2 pt-5 text-xs text-white/60"><span>PEHSU Murcia · SMS</span><span>Salud + naturaleza</span></div>
+      </div>
+      <div class="absolute -left-6 top-10 bg-white text-forest-900 rounded-2xl p-4 shadow-xl hidden md:block"><div class="text-3xl display">120′</div><div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500">por semana*</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="beneficios" class="py-20 md:py-24">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="max-w-2xl mb-10"><div class="text-xs font-extrabold uppercase tracking-[.2em] text-forest-700 mb-3">Naturaleza y salud</div><h2 class="display text-4xl md:text-5xl text-forest-950">Un entorno saludable puede cuidar de muchas maneras.</h2><p class="mt-4 text-slate-600 leading-relaxed">La investigación relaciona la exposición a espacios verdes y azules con beneficios en distintas dimensiones de la salud. Los efectos dependen del contexto, la persona y la actividad.</p></div>
+    <div class="grid md:grid-cols-4 gap-4 auto-rows-fr">
+      <article class="md:col-span-2 rounded-3xl bg-[#e4eee4] p-7 md:p-8 nature-card">
+        <div class="flex justify-between"><span class="text-xs font-extrabold uppercase tracking-widest text-forest-700">01 · Cuerpo</span><span class="text-3xl">♡</span></div>
+        <h3 class="display text-3xl mt-8">Salud cardiovascular y metabólica</h3><p class="text-sm text-slate-600 mt-3 leading-relaxed">Los entornos naturales pueden facilitar la actividad física y se asocian con indicadores más favorables de presión arterial, estrés fisiológico y salud cardiometabólica.</p>
+        <div class="mt-7 h-2 rounded-full bg-white/80 overflow-hidden"><div class="h-full w-4/5 bg-forest-600 rounded-full"></div></div>
+      </article>
+      <article class="md:col-span-2 rounded-3xl bg-[#e7edf1] p-7 md:p-8 nature-card">
+        <div class="flex justify-between"><span class="text-xs font-extrabold uppercase tracking-widest text-sms">02 · Mente</span><span class="text-3xl">☼</span></div>
+        <h3 class="display text-3xl mt-8">Salud mental y neurodesarrollo</h3><p class="text-sm text-slate-600 mt-3 leading-relaxed">El contacto con la naturaleza se relaciona con menor estrés y mejor bienestar emocional. En infancia, puede favorecer oportunidades de juego, exploración, atención y desarrollo.</p>
+        <div class="mt-7 flex gap-2"><span class="text-xs bg-white/80 px-3 py-2 rounded-full font-bold">Bienestar emocional</span><span class="text-xs bg-white/80 px-3 py-2 rounded-full font-bold">Atención</span></div>
+      </article>
+      <article class="rounded-3xl bg-[#f0eadb] p-7 nature-card">
+        <div class="text-xs font-extrabold uppercase tracking-widest text-amber-800">03 · Inmunidad</div><div class="text-3xl mt-5">✺</div><h3 class="display text-2xl mt-5">Sistema inmunitario y microbioma</h3><p class="text-sm text-slate-600 mt-3 leading-relaxed">La biodiversidad ambiental y el contacto con entornos naturales se investigan por su posible papel en la exposición microbiana y la regulación inmunitaria.</p>
+      </article>
+      <article class="rounded-3xl bg-[#e3ece8] p-7 nature-card">
+        <div class="text-xs font-extrabold uppercase tracking-widest text-forest-700">04 · Descanso</div><div class="text-3xl mt-5">☾</div><h3 class="display text-2xl mt-5">Sueño y bienestar</h3><p class="text-sm text-slate-600 mt-3 leading-relaxed">La actividad al aire libre, la luz natural y la reducción del estrés pueden contribuir a rutinas saludables y a una mejor percepción del bienestar.</p>
+      </article>
+      <article class="md:col-span-2 rounded-3xl bg-forest-900 text-white p-7 md:p-8 nature-card flex flex-col md:flex-row md:items-center gap-7">
+        <div class="shrink-0"><div class="display text-6xl text-sage-300">120′</div><div class="text-xs uppercase tracking-[.16em] font-extrabold text-white/60 mt-1">cada semana</div></div>
+        <div><h3 class="display text-2xl">Una referencia para empezar</h3><p class="text-sm text-white/70 mt-2 leading-relaxed">Un estudio poblacional observó que dedicar al menos 120 minutos semanales a la naturaleza se asociaba con mayor probabilidad de buena salud y bienestar. No es una dosis clínica universal: adapta la recomendación a cada persona.</p></div>
+      </article>
+    </div>
+    <p class="text-xs text-slate-500 mt-5">*Referencia: White MP et al. (2019). Spending at least 120 minutes a week in nature is associated with good health and wellbeing. Scientific Reports, 9, 7730. Los beneficios descritos reflejan asociaciones y líneas de investigación; no sustituyen la atención sanitaria indicada.</p>
+  </div>
+</section>
+
+<section id="espacios" class="py-20 bg-[#f0f2e9]">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-9">
+      <div><div class="text-xs font-extrabold uppercase tracking-[.2em] text-forest-700 mb-3">Explora la Región</div><h2 class="display text-4xl md:text-5xl text-forest-950">Espacios naturales de Murcia</h2><p class="mt-3 text-slate-600 max-w-xl">Selecciona un entorno para incorporarlo directamente al campo Lugar de la receta.</p></div>
+      <div class="flex flex-wrap gap-2" id="filters">
+        <button class="pill active" data-filter="Todos">Todos</button><button class="pill" data-filter="Montaña y Bosque">Montaña y bosque</button><button class="pill" data-filter="Costa y Humedales">Costa y humedales</button><button class="pill" data-filter="Urbano y Accesible">Urbano y accesible</button>
+      </div>
+    </div>
+    <div id="parksGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft" data-category="Montaña y Bosque"><div class="h-36 bg-gradient-to-br from-emerald-800 to-lime-700 p-6 flex items-end"><span class="text-5xl">🌲</span><span class="ml-auto text-white/80 text-xs font-bold">BOSQUE MEDITERRÁNEO</span></div><div class="p-6"><h3 class="display text-2xl">El Valle y Carrascoy</h3><p class="text-sm text-slate-500 mt-2">Senderos entre pinares, miradores y áreas recreativas en el entorno de Murcia.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Parque Regional El Valle y Carrascoy">Seleccionar este espacio →</button></div></article>
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft" data-category="Montaña y Bosque"><div class="h-36 bg-gradient-to-br from-stone-700 to-emerald-800 p-6 flex items-end"><span class="text-5xl">⛰️</span><span class="ml-auto text-white/80 text-xs font-bold">MONTAÑA</span></div><div class="p-6"><h3 class="display text-2xl">Sierra Espuña</h3><p class="text-sm text-slate-500 mt-2">Bosques, caminos forestales y paisajes de montaña para distintas intensidades.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Parque Regional Sierra Espuña">Seleccionar este espacio →</button></div></article>
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft" data-category="Costa y Humedales"><div class="h-36 bg-gradient-to-br from-sky-700 to-amber-500 p-6 flex items-end"><span class="text-5xl">🏖️</span><span class="ml-auto text-white/90 text-xs font-bold">COSTA</span></div><div class="p-6"><h3 class="display text-2xl">Calblanque</h3><p class="text-sm text-slate-500 mt-2">Playas, dunas, saladares y senderos litorales de gran valor ecológico.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Parque Regional de Calblanque">Seleccionar este espacio →</button></div></article>
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft" data-category="Costa y Humedales"><div class="h-36 bg-gradient-to-br from-cyan-700 to-blue-500 p-6 flex items-end"><span class="text-5xl">🦩</span><span class="ml-auto text-white/90 text-xs font-bold">HUMEDAL</span></div><div class="p-6"><h3 class="display text-2xl">Salinas de San Pedro</h3><p class="text-sm text-slate-500 mt-2">Humedales litorales, observación de aves y recorridos por pasarelas y caminos.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Parque Regional Salinas y Arenales de San Pedro del Pinatar">Seleccionar este espacio →</button></div></article>
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft" data-category="Montaña y Bosque"><div class="h-36 bg-gradient-to-br from-lime-800 to-stone-600 p-6 flex items-end"><span class="text-5xl">🌳</span><span class="ml-auto text-white/90 text-xs font-bold">SIERRA</span></div><div class="p-6"><h3 class="display text-2xl">Sierra de la Pila</h3><p class="text-sm text-slate-500 mt-2">Relieves montañosos, pinares y rutas para conectar con paisajes interiores.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Parque Regional Sierra de la Pila">Seleccionar este espacio →</button></div></article>
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft" data-category="Costa y Humedales"><div class="h-36 bg-gradient-to-br from-teal-700 to-orange-500 p-6 flex items-end"><span class="text-5xl">🌊</span><span class="ml-auto text-white/90 text-xs font-bold">LITORAL</span></div><div class="p-6"><h3 class="display text-2xl">Cabo Cope y Calnegre</h3><p class="text-sm text-slate-500 mt-2">Costa mediterránea, calas y paisajes semiáridos con rutas de diferente dificultad.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Parque Regional Cabo Cope y Puntas de Calnegre">Seleccionar este espacio →</button></div></article>
+      <article class="park-card bg-white rounded-3xl overflow-hidden shadow-soft sm:col-span-2 lg:col-span-3" data-category="Urbano y Accesible"><div class="md:flex"><div class="md:w-1/3 min-h-36 bg-gradient-to-br from-emerald-700 to-sky-700 p-6 flex items-end"><span class="text-5xl">🚶</span><span class="ml-auto text-white/90 text-xs font-bold">ENTORNO URBANO</span></div><div class="p-6 md:flex-1"><h3 class="display text-2xl">Corredor Verde del Río Segura</h3><p class="text-sm text-slate-500 mt-2 max-w-2xl">Itinerarios junto al río y espacios verdes conectados con núcleos urbanos, adecuados para paseos y actividad cotidiana.</p><button class="select-park mt-5 text-sm font-extrabold text-forest-700 hover:text-forest-950" data-place="Corredor Verde del Río Segura">Seleccionar este espacio →</button></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section id="mapa" class="py-20">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8"><div><div class="text-xs font-extrabold uppercase tracking-[.2em] text-forest-700 mb-3">Planifica la actividad</div><h2 class="display text-4xl md:text-5xl text-forest-950">Encuentra tu próximo entorno</h2><p class="text-slate-600 mt-3">Consulta el mapa de espacios naturales y recursos para planificar la prescripción.</p></div><a target="_blank" rel="noopener" href="https://www.google.com/maps/d/u/0/edit?mid=1QK7GDiQorJWLhakT5Fqss1iab42B_ZD4&usp=sharing" class="no-print inline-flex items-center gap-2 bg-forest-900 hover:bg-forest-700 text-white rounded-full px-5 py-3 text-sm font-bold">Abrir mapa completo ↗</a></div>
+    <div class="rounded-3xl overflow-hidden border border-sage-200 shadow-soft bg-white"><iframe title="Mapa de espacios naturales de la Región de Murcia" src="https://www.google.com/maps/d/embed?mid=1QK7GDiQorJWLhakT5Fqss1iab42B_ZD4" width="100%" height="520" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    <p class="text-xs text-slate-500 mt-3">El mapa se muestra mediante Google My Maps. La disponibilidad, accesibilidad y condiciones de visita deben comprobarse antes de recomendar el desplazamiento.</p>
+  </div>
+</section>
+
+<section id="crear-receta" class="py-20 bg-[#edf2eb]">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="mb-10"><div class="text-xs font-extrabold uppercase tracking-[.2em] text-forest-700 mb-3">Herramienta para profesionales sanitarios</div><h2 class="display text-4xl md:text-5xl text-forest-950">Crear Receta</h2><p class="mt-3 text-slate-600 max-w-2xl">Completa la propuesta de actividad y revisa el documento que recibirá el paciente. La información se actualiza en tiempo real.</p></div>
+    <div class="grid xl:grid-cols-[.92fr_1.08fr] gap-7 items-start">
+      <div class="bg-white rounded-3xl p-6 md:p-8 shadow-soft">
+        <div class="flex items-center gap-3 mb-7"><div class="w-10 h-10 rounded-xl bg-sage-100 text-forest-800 grid place-items-center font-extrabold">01</div><div><h3 class="font-extrabold text-forest-950">Datos de la prescripción</h3><p class="text-xs text-slate-500">Uso profesional · Evita incluir datos identificativos innecesarios</p></div></div>
+        <div class="space-y-5">
+          <div><label for="nhc" class="block text-sm font-bold mb-2">Código de paciente / Número de Historia Clínica (NHC)</label><input id="nhc" class="field" placeholder="Introduce el código o NHC" autocomplete="off"></div>
+          <div><label class="block text-sm font-bold mb-3">Objetivos terapéuticos</label><div class="grid sm:grid-cols-2 gap-2 text-sm" id="objectives">
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Reducir el estrés y favorecer la relajación" class="accent-forest-700"> Reducir estrés y favorecer relajación</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Promover la actividad física" class="accent-forest-700"> Promover actividad física</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Mejorar el bienestar emocional" class="accent-forest-700"> Mejorar bienestar emocional</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Favorecer el sueño y los ritmos saludables" class="accent-forest-700"> Favorecer sueño saludable</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Estimular el juego, la exploración y el neurodesarrollo" class="accent-forest-700"> Juego y neurodesarrollo</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Fomentar la conexión social y familiar" class="accent-forest-700"> Conexión social y familiar</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Promover el contacto con biodiversidad y entornos naturales" class="accent-forest-700"> Contacto con biodiversidad</label>
+            <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Mejorar la autonomía y la calidad de vida" class="accent-forest-700"> Autonomía y calidad de vida</label>
+          </div></div>
+          <div class="border-t border-sage-100 pt-5"><div class="text-xs uppercase tracking-widest text-forest-700 font-extrabold mb-4">Los cuatro pilares de la receta</div>
+            <div class="space-y-4">
+              <div><label for="place" class="block text-sm font-bold mb-2">1. Lugar para la actividad <span class="text-rose-600">*</span></label><input id="place" class="field" placeholder="Ej. Parque Regional El Valle y Carrascoy" required></div>
+              <div><label for="activity" class="block text-sm font-bold mb-2">2. Tipo de actividad <span class="text-rose-600">*</span></label><select id="activity" class="field"><option value="">Selecciona una actividad</option><option>Paseo tranquilo / senderismo adaptado</option><option>Juego libre y exploración en naturaleza</option><option>Observación de fauna, flora y biodiversidad</option><option>Actividad física moderada al aire libre</option><option>Jardinería / cuidado de plantas</option><option>Actividad en familia en un espacio natural</option><option>Descanso consciente y atención plena</option><option>Otra actividad acordada con el paciente</option></select></div>
+              <div class="grid sm:grid-cols-2 gap-4"><div><label for="duration" class="block text-sm font-bold mb-2">3. Duración <span class="text-rose-600">*</span></label><select id="duration" class="field"><option value="">Selecciona duración</option><option>15–20 minutos</option><option>30 minutos</option><option>45 minutos</option><option>60 minutos</option><option>90 minutos</option><option>120 minutos</option><option>Adaptada a tolerancia y capacidad</option></select></div><div><label for="frequency" class="block text-sm font-bold mb-2">4. Frecuencia <span class="text-rose-600">*</span></label><select id="frequency" class="field"><option value="">Selecciona frecuencia</option><option>Diaria</option><option>3 veces por semana</option><option>2 veces por semana</option><option>1 vez por semana</option><option>1–2 veces al mes</option><option>Progresiva, según tolerancia</option></select></div></div>
+            </div>
+          </div>
+          <div><label for="notes" class="block text-sm font-bold mb-2">Observaciones o recomendaciones adicionales</label><textarea id="notes" rows="4" class="field resize-y" placeholder="Adaptaciones, accesibilidad, hidratación, protección solar, acompañamiento..."></textarea></div>
+          <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900 leading-relaxed"><strong>Recordatorio profesional:</strong> individualiza la recomendación según situación clínica, preferencias, capacidad funcional, accesibilidad, meteorología y posibles riesgos. Esta herramienta no sustituye el juicio clínico.</div>
+        </div>
+      </div>
+
+      <div class="xl:sticky xl:top-24">
+        <div class="flex items-center justify-between mb-4 gap-3"><div><h3 class="font-extrabold text-forest-950">Vista previa de la receta</h3><p class="text-xs text-slate-500">Documento A4 · Actualización en tiempo real</p></div><span class="text-[10px] font-extrabold uppercase tracking-wider rounded-full bg-sage-200 text-forest-800 px-3 py-2">Vista paciente</span></div>
+        <div id="recipePaper" class="recipe-paper rounded-2xl p-6 md:p-8">
+          <div class="flex justify-between items-start border-b-2 border-forest-800 pb-5 gap-4">
+            <div><div class="text-[10px] font-extrabold uppercase tracking-[.18em] text-forest-700">Servicio Murciano de Salud</div><div class="display text-3xl text-forest-950 mt-1">Receta de Naturaleza</div><div class="text-[10px] text-slate-500 mt-1">PEHSU Murcia · Unidad de Salud Medioambiental Pediátrica</div></div>
+            <div class="text-right"><div class="text-2xl">🌿</div><div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Salud y entorno</div></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 py-5 border-b border-slate-200">
+            <div><div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Código / NHC</div><div id="pvNHC" class="font-bold text-sm mt-1 break-words">No especificado</div></div>
+            <div><div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Fecha de elaboración</div><div id="pvDate" class="font-bold text-sm mt-1"></div></div>
+          </div>
+          <div class="py-5"><div class="text-[10px] uppercase tracking-widest text-forest-700 font-extrabold mb-2">Objetivos de salud</div><div id="pvObjectives" class="text-xs text-slate-600 leading-relaxed">Selecciona uno o varios objetivos terapéuticos.</div></div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="bg-[#eaf1e9] rounded-xl p-4 sm:col-span-2"><div class="text-[9px] uppercase tracking-widest text-forest-700 font-extrabold">01 · Lugar para la actividad</div><div id="pvPlace" class="font-bold text-base mt-1">Por determinar</div></div>
+            <div class="bg-[#f2f4ed] rounded-xl p-4"><div class="text-[9px] uppercase tracking-widest text-forest-700 font-extrabold">02 · Tipo de actividad</div><div id="pvActivity" class="font-bold text-sm mt-1">Por determinar</div></div>
+            <div class="bg-[#f2f4ed] rounded-xl p-4"><div class="text-[9px] uppercase tracking-widest text-forest-700 font-extrabold">03 · Duración</div><div id="pvDuration" class="font-bold text-sm mt-1">Por determinar</div></div>
+            <div class="bg-[#f2f4ed] rounded-xl p-4 sm:col-span-2"><div class="text-[9px] uppercase tracking-widest text-forest-700 font-extrabold">04 · Frecuencia</div><div id="pvFrequency" class="font-bold text-sm mt-1">Por determinar</div></div>
+          </div>
+          <div class="mt-5"><div class="text-[9px] uppercase tracking-widest text-forest-700 font-extrabold mb-2">Recomendaciones adicionales</div><div id="pvNotes" class="text-xs text-slate-600 whitespace-pre-wrap leading-relaxed">Sin observaciones adicionales.</div></div>
+          <div class="mt-6">
+            <div class="flex items-end justify-between gap-2 mb-3"><div><div class="text-[10px] uppercase tracking-widest text-forest-700 font-extrabold">Mi seguimiento</div><div class="text-xs text-slate-500 mt-1">Marca cada día que realices la actividad</div></div><div class="text-[9px] text-slate-400">L · M · X · J · V · S · D</div></div>
+            <div class="border border-slate-200 rounded-xl overflow-hidden">
+              <div class="grid grid-cols-[58px_repeat(7,1fr)] bg-[#edf2eb] text-[9px] font-extrabold text-forest-800 text-center py-2"><div>Semana</div><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div>
+              <div id="trackingRows"></div>
+            </div>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-200 flex justify-between items-end gap-3"><div><div class="text-[10px] font-bold text-forest-800">Cada paseo cuenta. Disfruta y adapta el ritmo a ti.</div><div class="text-[8px] text-slate-400 mt-1">PEHSU Murcia · Servicio Murciano de Salud</div></div><div class="text-right text-[8px] text-slate-400">Receta de naturaleza</div></div>
+        </div>
+        <div class="no-print grid sm:grid-cols-3 gap-3 mt-4">
+          <button id="downloadPdf" class="rounded-xl bg-forest-900 hover:bg-forest-700 text-white py-3 px-3 text-xs font-extrabold transition">↓ Descargar PDF</button>
+          <button id="printRecipe" class="rounded-xl border border-forest-800 text-forest-900 hover:bg-white py-3 px-3 text-xs font-extrabold transition">Imprimir receta</button>
+          <button id="copyClinical" class="rounded-xl bg-sms hover:bg-sky-800 text-white py-3 px-3 text-xs font-extrabold transition">Copiar para HCE</button>
+        </div>
+        <p class="no-print text-[10px] text-slate-500 mt-3 leading-relaxed">La receta se genera localmente en este navegador. No se envía ni almacena en ningún servidor. Gestiona el NHC conforme a las políticas de seguridad y protección de datos de tu centro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="bg-forest-950 text-white py-10">
+  <div class="max-w-7xl mx-auto px-5 flex flex-col md:flex-row justify-between gap-6"><div><div class="font-extrabold">PEHSU Murcia</div><div class="text-sm text-white/60 mt-1">Unidad de Salud Medioambiental Pediátrica</div></div><div class="text-xs text-white/50 max-w-xl leading-relaxed">Programa de Prescripción de Naturaleza · Servicio Murciano de Salud. Recurso de apoyo a profesionales sanitarios. La indicación debe individualizarse y considerar la seguridad y accesibilidad de cada entorno.</div><a href="#inicio" class="text-sm font-bold text-sage-300">Volver arriba ↑</a></div>
+</footer>
+<div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-forest-950 text-white rounded-full px-5 py-3 shadow-2xl text-sm font-bold">✓ Resumen copiado al portapapeles</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fields = ['nhc','place','activity','duration','frequency','notes'];
+  const today = new Date();
+  $('pvDate').textContent = today.toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+  $('trackingRows').innerHTML = Array.from({length:4},(_,i)=>`<div class="grid grid-cols-[58px_repeat(7,1fr)] items-center gap-1 px-2 py-2 border-t border-slate-100"><div class="text-[10px] font-bold text-slate-600">Semana ${i+1}</div>${Array.from({length:7},()=>'<div class="week-cell"></div>').join('')}</div>`).join('');
+
+  function selectedObjectives(){return [...document.querySelectorAll('#objectives input:checked')].map(x=>x.value);}
+  function updatePreview(){
+    $('pvNHC').textContent=$('nhc').value.trim() || 'No especificado';
+    $('pvPlace').textContent=$('place').value.trim() || 'Por determinar';
+    $('pvActivity').textContent=$('activity').value || 'Por determinar';
+    $('pvDuration').textContent=$('duration').value || 'Por determinar';
+    $('pvFrequency').textContent=$('frequency').value || 'Por determinar';
+    $('pvNotes').textContent=$('notes').value.trim() || 'Sin observaciones adicionales.';
+    const objs=selectedObjectives();
+    $('pvObjectives').textContent=objs.length ? objs.map(x=>'• '+x).join('\n') : 'Selecciona uno o varios objetivos terapéuticos.';
+    $('pvObjectives').style.whiteSpace='pre-line';
+  }
+  fields.forEach(id=>$(id).addEventListener('input',updatePreview));
+  document.querySelectorAll('#objectives input').forEach(x=>x.addEventListener('change',updatePreview));
+  updatePreview();
+
+  document.querySelectorAll('.select-park').forEach(btn=>btn.addEventListener('click',()=>{
+    $('place').value=btn.dataset.place; updatePreview(); $('crear-receta').scrollIntoView({behavior:'smooth'});
+    $('place').focus({preventScroll:true});
+  }));
+  document.querySelectorAll('#filters button').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+    document.querySelectorAll('.park-card').forEach(card=>card.classList.toggle('hidden',btn.dataset.filter!=='Todos' && card.dataset.category!==btn.dataset.filter));
+  }));
+
+  function getData(){
+    return {nhc:$('nhc').value.trim()||'No especificado', objectives:selectedObjectives(), place:$('place').value.trim()||'Por determinar', activity:$('activity').value||'Por determinar', duration:$('duration').value||'Por determinar', frequency:$('frequency').value||'Por determinar', notes:$('notes').value.trim()||'Sin observaciones adicionales.', date:today.toLocaleDateString('es-ES')};
+  }
+  function clinicalText(d){
+    return `PRESCRIPCIÓN DE NATURALEZA — PEHSU MURCIA / SERVICIO MURCIANO DE SALUD\nFecha: ${d.date}\nCódigo de paciente / NHC: ${d.nhc}\n\nOBJETIVOS TERAPÉUTICOS:\n${d.objectives.length?d.objectives.map(x=>'• '+x).join('\n'):'No especificados'}\n\nPILARES DE LA PRESCRIPCIÓN:\n1. Lugar para la actividad: ${d.place}\n2. Tipo de actividad: ${d.activity}\n3. Duración: ${d.duration}\n4. Frecuencia: ${d.frequency}\n\nOBSERVACIONES / RECOMENDACIONES:\n${d.notes}\n\nSeguimiento: registro personal durante 4 semanas (lunes a domingo).\nRecomendación individualizada. Adaptar a situación clínica, capacidad, accesibilidad y condiciones ambientales.`;
+  }
+  function showToast(message){
+    $('toast').textContent=message; $('toast').classList.add('show');
+    setTimeout(()=>$('toast').classList.remove('show'),2600);
+  }
+  $('copyClinical').addEventListener('click',async()=>{
+    const text=clinicalText(getData());
+    try{await navigator.clipboard.writeText(text);showToast('✓ Resumen copiado para la historia clínica');}
+    catch(e){const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();try{document.execCommand('copy');showToast('✓ Resumen copiado para la historia clínica');}catch(err){showToast('No se pudo copiar. Comprueba los permisos del navegador.');}t.remove();}
+  });
+  $('printRecipe').addEventListener('click',()=>window.print());
+
+  $('downloadPdf').addEventListener('click',()=>{
+    if(!window.jspdf || !window.jspdf.jsPDF){showToast('No se ha podido cargar jsPDF. Comprueba tu conexión.');return;}
+    const d=getData(), {jsPDF}=window.jspdf, doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW=210, margin=16, usable=pageW-margin*2;
+    const green=[24,83,68], pale=[234,241,233], muted=[93,112,103], ink=[32,56,47];
+    let y=18;
+    const line=(yy)=>{doc.setDrawColor(24,83,68);doc.setLineWidth(.7);doc.line(margin,yy,pageW-margin,yy);};
+    const wrap=(text,width,size=9)=>{doc.setFont('helvetica','normal');doc.setFontSize(size);return doc.splitTextToSize(String(text),width);};
+    doc.setTextColor(...green);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('SERVICIO MURCIANO DE SALUD',margin,y);
+    doc.setTextColor(...ink);doc.setFont('helvetica','bold');doc.setFontSize(22);doc.text('Receta de Naturaleza',margin,y+11);
+    doc.setTextColor(...muted);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('PEHSU Murcia · Unidad de Salud Medioambiental Pediátrica',margin,y+17);
+    y+=23;line(y);y+=8;
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...muted);doc.text('CÓDIGO / NHC',margin,y);
+    doc.text('FECHA',margin+105,y);
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...ink);doc.text(doc.splitTextToSize(d.nhc,95),margin,y+6);
+    doc.setFont('helvetica','normal');doc.text(d.date,margin+105,y+6);y+=16;
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...green);doc.text('OBJETIVOS DE SALUD',margin,y);y+=5;
+    const objLines=wrap(d.objectives.length?d.objectives.map(x=>'• '+x).join('\n'):'No especificados',usable,8);
+    doc.setTextColor(...ink);doc.text(objLines,margin,y);y+=objLines.length*4+6;
+    const cards=[
+      ['01 · LUGAR PARA LA ACTIVIDAD',d.place,usable],
+      ['02 · TIPO DE ACTIVIDAD',d.activity,usable/2-3],
+      ['03 · DURACIÓN',d.duration,usable/2-3],
+      ['04 · FRECUENCIA',d.frequency,usable]
+    ];
+    cards.forEach((c,i)=>{
+      const full=(i===0||i===3), x=margin+(full?0:(i===1?0:usable/2+3)), w=full?usable:usable/2-3;
+      const labelY=y+5, lines=wrap(c[1],w-10,9), h=Math.max(18,11+lines.length*4.2);
+      doc.setFillColor(...pale);doc.roundedRect(x,y,w,h,2,2,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...green);doc.text(c[0],x+5,labelY);
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...ink);doc.text(lines,x+5,y+10);
+      if(full)y+=h+3; else if(i===2)y+=h+3;
+    });
+    y+=2;doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('OBSERVACIONES / RECOMENDACIONES',margin,y);y+=5;
+    const noteLines=wrap(d.notes,usable,8);doc.setFont('helvetica','normal');doc.setTextColor(...ink);doc.text(noteLines,margin,y);y+=noteLines.length*4+8;
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('MI SEGUIMIENTO · Marca cada día que realices la actividad',margin,y);y+=5;
+    const labelW=24, cellW=(usable-labelW)/7, rowH=10;
+    doc.setFillColor(...pale);doc.rect(margin,y,usable,rowH,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...green);doc.text('Semana',margin+2,y+6.5);
+    ['L','M','X','J','V','S','D'].forEach((v,i)=>doc.text(v,margin+labelW+i*cellW+cellW/2,y+6.5,{align:'center'}));
+    y+=rowH;
+    for(let w=1;w<=4;w++){doc.setDrawColor(190,205,194);doc.rect(margin,y,usable,rowH);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...ink);doc.text('Semana '+w,margin+2,y+6.5);for(let i=0;i<7;i++)doc.rect(margin+labelW+i*cellW+cellW/2-1.5,y+3.5,3,3);y+=rowH;}
+    y+=9;doc.setDrawColor(210,220,212);doc.line(margin,y,pageW-margin,y);y+=6;
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('Cada paseo cuenta. Disfruta y adapta el ritmo a ti.',margin,y);
+    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...muted);doc.text('PEHSU Murcia · Servicio Murciano de Salud',margin,y+5);
+    const safeNHC=(d.nhc==='No especificado'?'Sin_NHC':d.nhc).replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,50);
+    doc.save(`Receta_Naturaleza_${safeNHC}.pdf`);
+    showToast('✓ PDF generado correctamente');
+  });
+})();
+</script>
+</body>
+</html>
