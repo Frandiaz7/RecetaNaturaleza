@@ -162,7 +162,10 @@ tailwind.config = {
       <div class="bg-white rounded-3xl p-6 md:p-8 shadow-soft">
         <div class="flex items-center gap-3 mb-7"><div class="w-10 h-10 rounded-xl bg-sage-100 text-forest-800 grid place-items-center font-extrabold">01</div><div><h3 class="font-extrabold text-forest-950">Datos de la prescripción</h3><p class="text-xs text-slate-500">Uso profesional · Evita incluir datos identificativos innecesarios</p></div></div>
         <div class="space-y-5">
-          <div><label for="nhc" class="block text-sm font-bold mb-2">Código del prescriptor de Naturaleza / Nombre del prescriptor de Naturaleza</label><input id="nhc" class="field" placeholder="Introduce el código o nombre" autocomplete="off"></div>
+         <div>
+  <label for="prescriber" class="block text-sm font-bold mb-2">Código prescriptor / Nombre prescriptor</label>
+  <input id="prescriber" class="field" placeholder="Ej. Dra. García / Colegiado o código" autocomplete="off">
+</div>
           <div><label for="nhc" class="block text-sm font-bold mb-2">Código de paciente / Número de Historia Clínica (NHC)</label><input id="nhc" class="field" placeholder="Introduce el código o NHC" autocomplete="off"></div>
           <div><label class="block text-sm font-bold mb-3">Objetivos terapéuticos</label><div class="grid sm:grid-cols-2 gap-2 text-sm" id="objectives">
             <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Reducir el estrés y favorecer la relajación" class="accent-forest-700"> Reducir estrés y favorecer relajación</label>
@@ -195,10 +198,20 @@ tailwind.config = {
             <div><div class="text-[10px] font-extrabold uppercase tracking-[.18em] text-forest-700">Servicio Murciano de Salud</div><div class="display text-3xl text-forest-950 mt-1">Receta de Naturaleza</div><div class="text-[10px] text-slate-500 mt-1">PEHSU Murcia · Unidad de Salud Medioambiental Pediátrica</div></div>
             <div class="text-right"><div class="text-2xl">🌿</div><div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Salud y entorno</div></div>
           </div>
-          <div class="grid grid-cols-2 gap-3 py-5 border-b border-slate-200">
-            <div><div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Código / NHC</div><div id="pvNHC" class="font-bold text-sm mt-1 break-words">No especificado</div></div>
-            <div><div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Fecha de elaboración</div><div id="pvDate" class="font-bold text-sm mt-1"></div></div>
-          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 py-5 border-b border-slate-200">
+            <div>
+    <div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Prescriptor/a</div>
+    <div id="pvPrescriber" class="font-bold text-sm mt-1 break-words">No especificado</div>
+  </div>
+  <div>
+    <div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Código / NHC</div>
+    <div id="pvNHC" class="font-bold text-sm mt-1 break-words">No especificado</div>
+  </div>
+  <div>
+    <div class="text-[9px] uppercase tracking-widest text-slate-400 font-extrabold">Fecha de elaboración</div>
+    <div id="pvDate" class="font-bold text-sm mt-1"></div>
+  </div>
+</div>
           <div class="py-5"><div class="text-[10px] uppercase tracking-widest text-forest-700 font-extrabold mb-2">Objetivos de salud</div><div id="pvObjectives" class="text-xs text-slate-600 leading-relaxed">Selecciona uno o varios objetivos terapéuticos.</div></div>
           <div class="grid sm:grid-cols-2 gap-3">
             <div class="bg-[#eaf1e9] rounded-xl p-4 sm:col-span-2"><div class="text-[9px] uppercase tracking-widest text-forest-700 font-extrabold">01 · Lugar para la actividad</div><div id="pvPlace" class="font-bold text-base mt-1">Por determinar</div></div>
@@ -257,7 +270,7 @@ tailwind.config = {
 <script>
 (() => {
   const $ = id => document.getElementById(id);
-  const fields = ['nhc','place','activity','duration','frequency','notes'];
+  const fields = ['nhc','prescriber','place','activity','duration','frequency','notes'];
   const today = new Date();
   $('pvDate').textContent = today.toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
   $('trackingRows').innerHTML = Array.from({length:4},(_,i)=>`<div class="grid grid-cols-[58px_repeat(7,1fr)] items-center gap-1 px-2 py-2 border-t border-slate-100"><div class="text-[10px] font-bold text-slate-600">Semana ${i+1}</div>${Array.from({length:7},()=>'<div class="week-cell"></div>').join('')}</div>`).join('');
@@ -265,6 +278,7 @@ tailwind.config = {
   function selectedObjectives(){return [...document.querySelectorAll('#objectives input:checked')].map(x=>x.value);}
   function updatePreview(){
     $('pvNHC').textContent=$('nhc').value.trim() || 'No especificado';
+    $('pvPrescriber').textContent=$('prescriber').value.trim() || 'No especificado';
     $('pvPlace').textContent=$('place').value.trim() || 'Por determinar';
     $('pvActivity').textContent=$('activity').value || 'Por determinar';
     $('pvDuration').textContent=$('duration').value || 'Por determinar';
@@ -288,10 +302,20 @@ tailwind.config = {
   }));
 
   function getData(){
-    return {nhc:$('nhc').value.trim()||'No especificado', objectives:selectedObjectives(), place:$('place').value.trim()||'Por determinar', activity:$('activity').value||'Por determinar', duration:$('duration').value||'Por determinar', frequency:$('frequency').value||'Por determinar', notes:$('notes').value.trim()||'Sin observaciones adicionales.', date:today.toLocaleDateString('es-ES')};
+    return {
+      nhc:$('nhc').value.trim()||'No especificado',
+      prescriber:$('prescriber').value.trim()||'No especificado',
+      objectives:selectedObjectives(),
+      place:$('place').value.trim()||'Por determinar',
+      activity:$('activity').value||'Por determinar',
+      duration:$('duration').value||'Por determinar',
+      frequency:$('frequency').value||'Por determinar',
+      notes:$('notes').value.trim()||'Sin observaciones adicionales.',
+      date:today.toLocaleDateString('es-ES')
+    };
   }
   function clinicalText(d){
-    return `PRESCRIPCIÓN DE NATURALEZA — PEHSU MURCIA / SERVICIO MURCIANO DE SALUD\nFecha: ${d.date}\nCódigo de paciente / NHC: ${d.nhc}\n\nOBJETIVOS TERAPÉUTICOS:\n${d.objectives.length?d.objectives.map(x=>'• '+x).join('\n'):'No especificados'}\n\nPILARES DE LA PRESCRIPCIÓN:\n1. Lugar para la actividad: ${d.place}\n2. Tipo de actividad: ${d.activity}\n3. Duración: ${d.duration}\n4. Frecuencia: ${d.frequency}\n\nOBSERVACIONES / RECOMENDACIONES:\n${d.notes}\n\nSeguimiento: registro personal durante 4 semanas (lunes a domingo).\nRecomendación individualizada. Adaptar a situación clínica, capacidad, accesibilidad y condiciones ambientales.`;
+    return `PRESCRIPCIÓN DE NATURALEZA — PEHSU MURCIA / SERVICIO MURCIANO DE SALUD\nFecha: ${d.date}\nCódigo de paciente / NHC: ${d.nhc}\nCódigo / Nombre prescriptor: ${d.prescriber}\n\nOBJETIVOS TERAPÉUTICOS:\n${d.objectives.length?d.objectives.map(x=>'• '+x).join('\n'):'No especificados'}\n\nPILARES DE LA PRESCRIPCIÓN:\n1. Lugar para la actividad: ${d.place}\n2. Tipo de actividad: ${d.activity}\n3. Duración: ${d.duration}\n4. Frecuencia: ${d.frequency}\n\nOBSERVACIONES / RECOMENDACIONES:\n${d.notes}\n\nSeguimiento: registro personal durante 4 semanas (lunes a domingo).\nRecomendación individualizada. Adaptar a situación clínica, capacidad, accesibilidad y condiciones ambientales.`;
   }
   function showToast(message){
     $('toast').textContent=message; $('toast').classList.add('show');
@@ -312,33 +336,76 @@ tailwind.config = {
     let y=18;
     const line=(yy)=>{doc.setDrawColor(24,83,68);doc.setLineWidth(.7);doc.line(margin,yy,pageW-margin,yy);};
     const wrap=(text,width,size=9)=>{doc.setFont('helvetica','normal');doc.setFontSize(size);return doc.splitTextToSize(String(text),width);};
+
+    // Cabecera + Logo PEHSU
     doc.setTextColor(...green);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('SERVICIO MURCIANO DE SALUD',margin,y);
     doc.setTextColor(...ink);doc.setFont('helvetica','bold');doc.setFontSize(22);doc.text('Receta de Naturaleza',margin,y+11);
     doc.setTextColor(...muted);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('PEHSU Murcia · Unidad de Salud Medioambiental Pediátrica',margin,y+17);
+
+    try {
+      const logoImg = document.querySelector('img[src="logo-pehsu.jpeg"]');
+      if (logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
+        const canvas = document.createElement('canvas');
+        canvas.width = logoImg.naturalWidth;
+        canvas.height = logoImg.naturalHeight;
+        canvas.getContext('2d').drawImage(logoImg, 0, 0);
+        const logoData = canvas.toDataURL('image/jpeg', 0.95);
+        const logoH = 18;
+        const logoW = (logoImg.naturalWidth / logoImg.naturalHeight) * logoH;
+        doc.addImage(logoData, 'JPEG', pageW - margin - logoW, y - 3, logoW, logoH);
+      }
+    } catch (e) {
+      console.warn('No se pudo incrustar el logo en el PDF:', e);
+    }
+
     y+=23;line(y);y+=8;
-    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...muted);doc.text('CÓDIGO / NHC',margin,y);
-    doc.text('FECHA',margin+105,y);
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...ink);doc.text(doc.splitTextToSize(d.nhc,95),margin,y+6);
-    doc.setFont('helvetica','normal');doc.text(d.date,margin+105,y+6);y+=16;
+
+    // Datos de NHC, Prescriptor y Fecha
+    const col1=margin, col2=margin+62, col3=margin+138;
+    doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(...muted);
+    doc.text('CÓDIGO / NHC',col1,y);
+    doc.text('CÓDIGO / NOMBRE PRESCRIPTOR',col2,y);
+    doc.text('FECHA',col3,y);
+
+    doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...ink);
+    const nhcLines=doc.splitTextToSize(d.nhc,56);
+    const prescLines=doc.splitTextToSize(d.prescriber,70);
+    doc.text(nhcLines,col1,y+5.5);
+    doc.text(prescLines,col2,y+5.5);
+    doc.setFont('helvetica','normal');
+    doc.text(d.date,col3,y+5.5);
+    y += Math.max(nhcLines.length, prescLines.length)*4.5 + 11;
+
+    // Objetivos
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...green);doc.text('OBJETIVOS DE SALUD',margin,y);y+=5;
     const objLines=wrap(d.objectives.length?d.objectives.map(x=>'• '+x).join('\n'):'No especificados',usable,8);
     doc.setTextColor(...ink);doc.text(objLines,margin,y);y+=objLines.length*4+6;
-    const cards=[
-      ['01 · LUGAR PARA LA ACTIVIDAD',d.place,usable],
-      ['02 · TIPO DE ACTIVIDAD',d.activity,usable/2-3],
-      ['03 · DURACIÓN',d.duration,usable/2-3],
-      ['04 · FRECUENCIA',d.frequency,usable]
-    ];
-    cards.forEach((c,i)=>{
-      const full=(i===0||i===3), x=margin+(full?0:(i===1?0:usable/2+3)), w=full?usable:usable/2-3;
-      const labelY=y+5, lines=wrap(c[1],w-10,9), h=Math.max(18,11+lines.length*4.2);
-      doc.setFillColor(...pale);doc.roundedRect(x,y,w,h,2,2,'F');
-      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...green);doc.text(c[0],x+5,labelY);
-      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...ink);doc.text(lines,x+5,y+10);
-      if(full)y+=h+3; else if(i===2)y+=h+3;
-    });
-    y+=2;doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('OBSERVACIONES / RECOMENDACIONES',margin,y);y+=5;
+
+    // Pilares (con altura sincronizada para 02 y 03)
+    const drawCard=(title,val,x,yy,w,fixedH)=>{
+      const lines=wrap(val,w-10,9);
+      const h=fixedH || Math.max(18,11+lines.length*4.2);
+      doc.setFillColor(...pale);doc.roundedRect(x,yy,w,h,2,2,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...green);doc.text(title,x+5,yy+5);
+      doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...ink);doc.text(lines,x+5,yy+10);
+      return h;
+    };
+
+    y += drawCard('01 · LUGAR PARA LA ACTIVIDAD',d.place,margin,y,usable) + 3;
+    const halfW=usable/2-3;
+    const h2=Math.max(18,11+wrap(d.activity,halfW-10,9).length*4.2);
+    const h3=Math.max(18,11+wrap(d.duration,halfW-10,9).length*4.2);
+    const row23H=Math.max(h2,h3);
+    drawCard('02 · TIPO DE ACTIVIDAD',d.activity,margin,y,halfW,row23H);
+    drawCard('03 · DURACIÓN',d.duration,margin+halfW+6,y,halfW,row23H);
+    y += row23H + 3;
+    y += drawCard('04 · FRECUENCIA',d.frequency,margin,y,usable) + 5;
+
+    // Observaciones
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('OBSERVACIONES / RECOMENDACIONES',margin,y);y+=5;
     const noteLines=wrap(d.notes,usable,8);doc.setFont('helvetica','normal');doc.setTextColor(...ink);doc.text(noteLines,margin,y);y+=noteLines.length*4+8;
+
+    // Seguimiento
     doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('MI SEGUIMIENTO · Marca cada día que realices la actividad',margin,y);y+=5;
     const labelW=24, cellW=(usable-labelW)/7, rowH=10;
     doc.setFillColor(...pale);doc.rect(margin,y,usable,rowH,'F');
@@ -349,6 +416,7 @@ tailwind.config = {
     y+=9;doc.setDrawColor(210,220,212);doc.line(margin,y,pageW-margin,y);y+=6;
     doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...green);doc.text('Cada paseo cuenta. Disfruta y adapta el ritmo a ti.',margin,y);
     doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...muted);doc.text('PEHSU Murcia · Servicio Murciano de Salud',margin,y+5);
+
     const safeNHC=(d.nhc==='No especificado'?'Sin_NHC':d.nhc).replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,50);
     doc.save(`Receta_Naturaleza_${safeNHC}.pdf`);
     showToast('✓ PDF generado correctamente');
