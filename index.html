@@ -162,6 +162,7 @@ tailwind.config = {
       <div class="bg-white rounded-3xl p-6 md:p-8 shadow-soft">
         <div class="flex items-center gap-3 mb-7"><div class="w-10 h-10 rounded-xl bg-sage-100 text-forest-800 grid place-items-center font-extrabold">01</div><div><h3 class="font-extrabold text-forest-950">Datos de la prescripción</h3><p class="text-xs text-slate-500">Uso profesional · Evita incluir datos identificativos innecesarios</p></div></div>
         <div class="space-y-5">
+          <div><label for="nhc" class="block text-sm font-bold mb-2">Código del prescriptor de Naturaleza / Nombre del prescriptor de Naturaleza</label><input id="nhc" class="field" placeholder="Introduce el código o nombre" autocomplete="off"></div>
           <div><label for="nhc" class="block text-sm font-bold mb-2">Código de paciente / Número de Historia Clínica (NHC)</label><input id="nhc" class="field" placeholder="Introduce el código o NHC" autocomplete="off"></div>
           <div><label class="block text-sm font-bold mb-3">Objetivos terapéuticos</label><div class="grid sm:grid-cols-2 gap-2 text-sm" id="objectives">
             <label class="flex gap-2 items-center rounded-xl bg-sage-100/60 p-3"><input type="checkbox" value="Reducir el estrés y favorecer la relajación" class="accent-forest-700"> Reducir estrés y favorecer relajación</label>
